@@ -6,7 +6,8 @@ import androidx.compose.ui.Modifier
 import com.example.simulacro_retrofit.viewmodel.PlantillaUIState
 
 @Composable
-fun PantallaInicio(modifier: Modifier, uiState: PlantillaUIState){
+fun PantallaInicio(modifier: Modifier, uiState: PlantillaUIState,
+                   ){
 
 
 }

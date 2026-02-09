@@ -11,11 +11,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.simulacro_retrofit.datos.Nombre_Clase_App
+import com.example.simulacro_retrofit.datos.PlantillaDAO_Repositorio
 import com.example.simulacro_retrofit.datos.RepositorioEjemplo
+import com.example.simulacro_retrofit.modelo.Campo_SQLite
 import com.example.simulacro_retrofit.modelo.objeto_ejemplo
 import kotlinx.coroutines.launch
 import java.io.IOException
 
+
+//VIEWMODEL 1: PARTE RETROFIT
 
 sealed interface  PlantillaUIState{
 
@@ -23,7 +27,7 @@ sealed interface  PlantillaUIState{
     data class ObtenerLista(val objetos: List<objeto_ejemplo>) : PlantillaUIState
 
     //data class para crear objeto
-    data class CrearExito(val objeto: objeto_ejemplo) : PlantillaUIState
+    data class InsertarObjeto(val objeto: objeto_ejemplo) : PlantillaUIState
 
     //data class para actualizar
     data class ActualizarExito(val objeto: objeto_ejemplo) : PlantillaUIState
@@ -50,21 +54,69 @@ class PlantillaViewModel(private val plantillaRepositorio: RepositorioEjemplo): 
 
     /* INIT es NECESARIO si empieza en primera pantalla algo de retrofit y necesitas una función
     init{
-       obtener_Lista()
+       obtenerLista()
     }
      */
 
-    fun funcion_lista(){
-        plantillaUIState = PlantillaUIState.Cargando
-        plantillaUIState = try{
-            val listaObjetos = plantillaRepositorio.funcion_lista()
-            PlantillaUIState.ObtenerLista(listaObjetos)
+    //Un esquema es que las funciones siempre se basan en "val nueva = repositorio.funciondelrepositorio() y luego usando el UIState se pone su funcion
 
-        } catch (e: IOException){
-            PlantillaUIState.Error
-        } catch(e: HttpException){
-            PlantillaUIState.Error
+    fun obtenerLista() {
+        viewModelScope.launch {
+            plantillaUIState = PlantillaUIState.Cargando
+            plantillaUIState = try {
+                val listaObjetos = plantillaRepositorio.funcion_lista_repositorio()
+                PlantillaUIState.ObtenerLista(listaObjetos)
+
+            } catch (e: IOException) {
+                PlantillaUIState.Error
+            } catch (e: retrofit2.HttpException) {
+                PlantillaUIState.Error
+            }
         }
+    }
+
+
+    fun insertarObjeto(objeto_parametro: objeto_ejemplo){
+        viewModelScope.launch {
+            plantillaUIState = PlantillaUIState.Cargando
+            plantillaUIState = try{
+                val modelo_nuevo  = plantillaRepositorio.insertar_objeto_repositorio(objeto_parametro)
+                PlantillaUIState.InsertarObjeto(modelo_nuevo)
+            } catch (e: IOException) {
+                PlantillaUIState.Error
+            } catch (e: retrofit2.HttpException) {
+                PlantillaUIState.Error
+            }
+        }
+    }
+
+
+    fun actualizarObjeto(id_parametro: String, objeto_parametro: objeto_ejemplo){
+        viewModelScope.launch{
+            plantillaUIState = PlantillaUIState.Cargando
+            plantillaUIState = try{
+                val modelo_actualizado = plantillaRepositorio.actualizar_objeto_repositorio(id_parametro, objeto_parametro)
+                PlantillaUIState.ActualizarExito(modelo_actualizado)
+            } catch (e : IOException){
+                PlantillaUIState.Error
+            } catch (e: IOException){
+                PlantillaUIState.Error
+            }
+        }
+    }
+
+    fun eliminarObjeto(id_parametro: String){
+        viewModelScope.launch {
+            plantillaUIState = PlantillaUIState.Cargando
+            plantillaUIState = try {
+                val objeto_a_borrar = plantillaRepositorio.eliminar_objeto_repositorio(id_parametro)
+                PlantillaUIState.EliminarExito(id_parametro)
+            } catch (e: IOException){
+                PlantillaUIState.Error
+            } catch (e: IOException){
+                PlantillaUIState.Error
+            }
+         }
     }
 
 //PARTE 2: FACTORY PARA EL VIEWMODEL (NECESARIO)
@@ -78,6 +130,78 @@ class PlantillaViewModel(private val plantillaRepositorio: RepositorioEjemplo): 
             }
         }
     }
-
 }
 
+
+//---------------------------------------
+//PARTE 2 VIEWMODEL: DAOS
+//---------------------------------------
+
+//parte 1 - sealed interface
+sealed interface DAO_UIState{
+    data class ObtenerListaTodos(val lista_objetos: List<Campo_SQLite>): DAO_UIState
+    data class ObtenerLista_Concreta(val lista_objetos_id: Campo_SQLite): DAO_UIState
+
+    object InsertarExito: DAO_UIState
+    object ActualizarExito: DAO_UIState
+    object Error: DAO_UIState
+    object Cargando: DAO_UIState
+}
+
+
+class ViewModelDAO (private val variable_RepositorioDAO: PlantillaDAO_Repositorio): ViewModel(){
+
+    var BD_UIState: DAO_UIState by mutableStateOf(DAO_UIState.Cargando)
+        private set
+
+    var objetoPulsado: Campo_SQLite by mutableStateOf(Campo_SQLite(0, "", 0.0, 0))
+        private set
+
+    /*
+    init {ObtenerListaTodos()}
+     */
+
+    fun obtener_lista_todos(){
+        viewModelScope.launch {
+            BD_UIState = DAO_UIState.Cargando
+            BD_UIState = try{
+                val lista =  variable_RepositorioDAO.obtenerTodos()
+                DAO_UIState.ObtenerListaTodos(lista)
+            } catch (e: IOException){
+                DAO_UIState.Error
+            } catch (e: HttpException){
+                DAO_UIState.Error
+            }
+        }
+    }
+
+    fun obtener_objeto_concreto(id_parametro_dao: Int){
+        viewModelScope.launch {
+            BD_UIState = DAO_UIState.Cargando
+            BD_UIState = try{
+                val objeto_concreto = variable_RepositorioDAO.obtenerObjetos_BD(id_parametro_dao)
+                DAO_UIState.ObtenerLista_Concreta(objeto_concreto)
+            } catch (e: IOException){
+                DAO_UIState.Error
+            } catch (e: HttpException){
+                DAO_UIState.Error
+            }
+        }
+    }
+
+
+    fun actualizar_objeto(campoSqlite: Campo_SQLite){
+        viewModelScope.launch {
+            BD_UIState = DAO_UIState.Cargando
+            BD_UIState = try{
+                val actualizar_objeto = variable_RepositorioDAO.actualizar(campoSqlite)
+                DAO_UIState.ActualizarExito
+            } catch (e: IOException){
+                DAO_UIState.Error
+            } catch (e: HttpException){
+                DAO_UIState.Error
+            }
+        }
+    }
+
+}

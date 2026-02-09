@@ -14,7 +14,7 @@ import retrofit2.http.Path
 
         //ahora obtenerLista, insertarObjeto, etc. sera para el viewmodel igual
         @GET("objetodeljson")
-        suspend fun funcion_lista(): List<objeto_ejemplo>
+        suspend fun lista_api(): List<objeto_ejemplo>
         @POST("objetodeljson")
         suspend fun insertarobjeto_api(
             @Body objeto: objeto_ejemplo

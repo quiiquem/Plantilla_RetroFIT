@@ -100,7 +100,7 @@ fun NavegacionBar(
                 PantallaInicio(
                     modifier = Modifier
                         .fillMaxSize(),
-
+                    uiState = viewModel_Ejemplo.plantillaUIState
                 )
             }
             composable(route = Pantallas.Insertar.name) {

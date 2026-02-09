@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,6 +51,7 @@ import com.example.simulacro_retrofit.ui.pantallas.PantallaInsertar
 import com.example.simulacro_retrofit.ui.pantallas.PantallaLista
 import com.example.simulacro_retrofit.R
 import com.example.simulacro_retrofit.datos.DrawerMenu
+import com.example.simulacro_retrofit.viewmodel.PlantillaViewModel
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -73,6 +75,7 @@ fun NavegacionDrawer(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    viewModel_P: PlantillaViewModel= viewModel(factory = PlantillaViewModel.Factory)
 ){
     val pilaRetroceso by navController.currentBackStackEntryAsState()
 
@@ -115,7 +118,9 @@ fun NavegacionDrawer(
                 composable(route = Pantallas.Inicio.name) {
                     PantallaInicio(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxSize(),
+                        uiState = viewModel_P.plantillaUIState
+
                     )
                 }
                 composable(route = Pantallas.Insertar.name) {
