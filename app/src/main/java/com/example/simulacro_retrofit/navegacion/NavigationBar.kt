@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,6 +33,7 @@ import com.example.simulacro_retrofit.modelo.Rutas
 import com.example.simulacro_retrofit.ui.pantallas.PantallaInicio
 import com.example.simulacro_retrofit.ui.pantallas.PantallaInsertar
 import com.example.simulacro_retrofit.ui.pantallas.PantallaLista
+import com.example.simulacro_retrofit.viewmodel.PlantillaViewModel
 
 enum class Pantallas(@StringRes val titulo: Int) {
     Inicio(titulo = R.string.pantalla_inicio),
@@ -53,6 +55,8 @@ val listaRutas = listOf(
 @Composable
 fun NavegacionBar(
     navController: NavHostController = rememberNavController()
+    ,
+    viewModel_Ejemplo: PlantillaViewModel = viewModel(factory = PlantillaViewModel.Factory)
 ){
     var selectedItem by remember { mutableIntStateOf(0) }
 
@@ -95,7 +99,8 @@ fun NavegacionBar(
             composable(route = Pantallas.Inicio.name) {
                 PantallaInicio(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxSize(),
+
                 )
             }
             composable(route = Pantallas.Insertar.name) {

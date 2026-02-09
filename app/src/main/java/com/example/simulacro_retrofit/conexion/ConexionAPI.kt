@@ -9,26 +9,28 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 
-    interface RepositorioServicioApi{
+//Crear Interfaz para crear el servicioAPI en repositorio y conectar metodos del viewmodel
+    interface Repositorio_Modelo_ServicioAPI{
 
+        //ahora obtenerLista, insertarObjeto, etc. sera para el viewmodel igual
         @GET("objetodeljson")
-        suspend fun obtenerLista(): List<objeto_ejemplo>
-
-
+        suspend fun funcion_lista(): List<objeto_ejemplo>
         @POST("objetodeljson")
-        suspend fun insertarObjeto(
+        suspend fun insertarobjeto_api(
             @Body objeto: objeto_ejemplo
         ): objeto_ejemplo
 
         @PUT("objetodeljson/{id}")
-        suspend fun actualizarObjeto(
+        suspend fun actualizarobjeto_api(
             @Path("id") id: String,
             @Body objeto: objeto_ejemplo
         ): objeto_ejemplo
 
         @DELETE("objetodeljson/{id}")
-        suspend fun eliminarObjeto(
+        suspend fun eliminarobjeto_api(
             @Path("id") id: String
         ): objeto_ejemplo
     }
 
+
+   // interface Repositorio_ModeloSecundario_ServicioAPI
