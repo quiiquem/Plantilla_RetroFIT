@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name" translatable="false">Simulacro_RetroFIT</string>
+    <string name="pantalla_inicio" translatable="false">pantalla_inicio</string>
+    <string name="pantalla_insertar" translatable="false">pantalla_insertar</string>
+    <string name="pantalla_listar" translatable="false">pantalla_listar</string>
+    <string name="pantalla_actualizar" translatable="false">pantalla_actualizar</string>
+    <string name="atras">atras</string>
+</resources>
