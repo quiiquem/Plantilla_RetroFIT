@@ -1,9 +1,9 @@
 package com.example.simulacro_retrofit.datos
 
-import com.example.simulacro_retrofit.DAO.Interfaz_DAO
+import com.example.simulacro_retrofit.DAO.Interfaz_ObjetoDAO
 import com.example.simulacro_retrofit.modelo.Campo_SQLite
 
-//Interfaz (llamar las funciones de EjemploDAO)
+//Interfaz , aqui defino los metodos para el objeto de la BD
 interface PlantillaDAO_Repositorio{
     suspend fun obtenerObjetos_BD(id: Int): Campo_SQLite
     suspend fun obtenerTodos(): List<Campo_SQLite>
@@ -14,9 +14,9 @@ interface PlantillaDAO_Repositorio{
     suspend fun eliminar(campo_SQLite: Campo_SQLite)
 }
 
-//Clase de conexion del DAO
+//Implementación de repositorio al DAO para fuente de datos
 
-class ConexionDAORepositorio(private val variable_interfaz: Interfaz_DAO): PlantillaDAO_Repositorio {
+class ConexionDAORepositorio(private val variable_interfaz: Interfaz_ObjetoDAO): PlantillaDAO_Repositorio {
 
     //Funciones de arriba implementadas
 

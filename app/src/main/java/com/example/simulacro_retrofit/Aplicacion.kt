@@ -11,6 +11,6 @@ class Aplicacion: Application(){
         super.onCreate()
 
         //nombre de la clase de Contenedor App
-        contenedor = Nombre_Clase_App()
+        contenedor = Nombre_Clase_App(applicationContext) //poner el contexto de la BD
     }
 }

@@ -99,7 +99,7 @@ class PlantillaViewModel(private val plantillaRepositorio: RepositorioEjemplo): 
                 PlantillaUIState.ActualizarExito(modelo_actualizado)
             } catch (e : IOException){
                 PlantillaUIState.Error
-            } catch (e: IOException){
+            } catch (e:  retrofit2.HttpException){
                 PlantillaUIState.Error
             }
         }
@@ -109,11 +109,11 @@ class PlantillaViewModel(private val plantillaRepositorio: RepositorioEjemplo): 
         viewModelScope.launch {
             plantillaUIState = PlantillaUIState.Cargando
             plantillaUIState = try {
-                val objeto_a_borrar = plantillaRepositorio.eliminar_objeto_repositorio(id_parametro)
+                plantillaRepositorio.eliminar_objeto_repositorio(id_parametro)
                 PlantillaUIState.EliminarExito(id_parametro)
             } catch (e: IOException){
                 PlantillaUIState.Error
-            } catch (e: IOException){
+            } catch (e:  retrofit2.HttpException){
                 PlantillaUIState.Error
             }
          }
@@ -169,8 +169,6 @@ class ViewModelDAO (private val variable_RepositorioDAO: PlantillaDAO_Repositori
                 DAO_UIState.ObtenerListaTodos(lista)
             } catch (e: IOException){
                 DAO_UIState.Error
-            } catch (e: HttpException){
-                DAO_UIState.Error
             }
         }
     }
@@ -183,22 +181,28 @@ class ViewModelDAO (private val variable_RepositorioDAO: PlantillaDAO_Repositori
                 DAO_UIState.ObtenerLista_Concreta(objeto_concreto)
             } catch (e: IOException){
                 DAO_UIState.Error
-            } catch (e: HttpException){
+            }
+        }
+    }
+
+    fun insertar_objeto(objeto_parametro_DAO: Campo_SQLite){
+        viewModelScope.launch {
+            BD_UIState = DAO_UIState.Cargando
+            BD_UIState = try {
+                 variable_RepositorioDAO.insertar(objeto_parametro_DAO)
+                DAO_UIState.InsertarExito
+            } catch (e: IOException){
                 DAO_UIState.Error
             }
         }
     }
 
-
     fun actualizar_objeto(campoSqlite: Campo_SQLite){
         viewModelScope.launch {
-            BD_UIState = DAO_UIState.Cargando
             BD_UIState = try{
-                val actualizar_objeto = variable_RepositorioDAO.actualizar(campoSqlite)
+                variable_RepositorioDAO.actualizar(campoSqlite)
                 DAO_UIState.ActualizarExito
             } catch (e: IOException){
-                DAO_UIState.Error
-            } catch (e: HttpException){
                 DAO_UIState.Error
             }
         }

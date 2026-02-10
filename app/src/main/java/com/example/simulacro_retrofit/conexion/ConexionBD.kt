@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.simulacro_retrofit.DAO.Interfaz_DAO
+import com.example.simulacro_retrofit.DAO.Interfaz_ObjetoDAO
 import com.example.simulacro_retrofit.modelo.Campo_SQLite
 
 
@@ -12,8 +12,10 @@ import com.example.simulacro_retrofit.modelo.Campo_SQLite
 abstract class ConexionBaseDatos: RoomDatabase() {
 
     //funcion abstracta entre el DAO y la parte de interfaz (Interfaz_DAO esta en EjemploDAO)
-    abstract fun inventarioDAO(): Interfaz_DAO
+    abstract fun basededatos(): Interfaz_ObjetoDAO
 
+
+    //Literalmente conectarlo a la base de datos creada
     companion object{
         @Volatile
         private var Instance: ConexionBaseDatos? = null

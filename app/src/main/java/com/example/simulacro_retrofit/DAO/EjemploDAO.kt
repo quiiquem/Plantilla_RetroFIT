@@ -10,9 +10,10 @@ import com.example.simulacro_retrofit.modelo.Campo_SQLite
 
 //La parte de DAO, es la misma lógica que tenemos en acceso a datos
 @Dao
-interface Interfaz_DAO {
+interface Interfaz_ObjetoDAO {
 
     //Campo_SQLite es el nombre del objeto de DAO (esta en modelo)
+    //Los metodos que tengan un ":" despues del cierre de parentesis es que SI devuelven algo
 
     //Listar todos en orden ascendente
     @Query("SELECT * from nombre_tabla ORDER BY nombre ASC")
